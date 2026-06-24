@@ -77,7 +77,7 @@ function renderFinancials() {
         const d = gameState.balances[acc].debit;
         const c = gameState.balances[acc].credit;
         
-        // Comptes d'actif (512, 215, 44566) -> solde débiteur
+        // Comptes d'actif (512, 215, 44566, 601) -> solde débiteur
         if (["512", "215", "44566", "601"].includes(acc)) {
             const solde = d - c;
             if (solde !== 0) {
@@ -112,7 +112,7 @@ function handleFormSubmit() {
     gameState.balances[account].debit += debit;
     gameState.balances[account].credit += credit;
 
-    // Reset inputs
+    // Reset inputs proprement
     document.getElementById('input-debit').value = 0;
     document.getElementById('input-credit').value = 0;
 

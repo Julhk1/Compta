@@ -27,7 +27,7 @@
         <div class="panel-left">
             <div class="card" id="quest-card">
                 <h2 id="quest-title">Objectif</h2>
-                <div id="quest-description">Description de la quête...</div>
+                <div id="quest-description">Description...</div>
             </div>
 
             <div class="card">
@@ -55,12 +55,7 @@
                 <h3>📖 Livre-Journal du mois</h3>
                 <table>
                     <thead>
-                        <tr>
-                            <th>Compte</th>
-                            <th>Débit</th>
-                            <th>Crédit</th>
-                            <th>Action</th>
-                        </tr>
+                        <tr><th>Compte</th><th>Débit</th><th>Crédit</th><th>Action</th></tr>
                     </thead>
                     <tbody id="journal-table-body"></tbody>
                 </table>
@@ -68,35 +63,53 @@
         </div>
 
         <div class="panel-right">
+            
             <div class="card">
-                <h2>📊 États Financiers (En temps réel)</h2>
+                <h2 style="color: var(--accent-green); border-bottom: 2px solid var(--border-color); padding-bottom: 5px;">⚖️ LE BILAN (Situation Patrimoniale)</h2>
                 <div class="grid-2">
                     <div>
-                        <h4 class="title-actif">ACTIF (Ce qu'on possède)</h4>
+                        <h4 class="title-actif">ACTIF</h4>
                         <div id="actif-list"></div>
-                        <hr style="border: 0; border-top: 1px solid var(--border-color); margin-top: 15px;">
-                        <div class="financial-line" style="font-weight: bold;">
-                            <span>Total Actif :</span>
-                            <span><span id="total-actif">0</span> €</span>
-                        </div>
+                        <hr style="border:0; border-top:1px solid var(--border-color); margin-top:10px;">
+                        <div class="financial-line"><span><strong>Total Actif :</strong></span><span><strong id="total-actif">0</strong> €</span></div>
                     </div>
                     <div>
-                        <h4 class="title-passif">PASSIF & RÉSULTAT</h4>
+                        <h4 class="title-passif">PASSIF</h4>
                         <div id="passif-list"></div>
-                        <hr style="border: 0; border-top: 1px solid var(--border-color); margin-top: 15px;">
-                        <div class="financial-line" style="font-weight: bold;">
-                            <span>Total Passif :</span>
-                            <span><span id="total-passif">0</span> €</span>
-                        </div>
+                        <hr style="border:0; border-top:1px solid var(--border-color); margin-top:10px;">
+                        <div class="financial-line"><span><strong>Total Passif :</strong></span><span><strong id="total-passif">0</strong> €</span></div>
                     </div>
                 </div>
             </div>
 
+            <div class="card" style="background-color: #f1f5f9;">
+                <h2 style="color: #0284c7; border-bottom: 2px solid var(--border-color); padding-bottom: 5px;">📊 LE COMPTE DE RÉSULTAT (Activité)</h2>
+                <div class="grid-2">
+                    <div>
+                        <h4 style="color: var(--accent-red);">CHARGES (Dépenses)</h4>
+                        <div id="charges-list"></div>
+                        <hr style="border:0; border-top:1px solid var(--border-color); margin-top:10px;">
+                        <div class="financial-line"><span><strong>Total Charges :</strong></span><span><strong id="total-charges">0</strong> €</span></div>
+                    </div>
+                    <div>
+                        <h4 style="color: var(--accent-green);">PRODUITS (Ventes)</h4>
+                        <div id="produits-list"></div>
+                        <hr style="border:0; border-top:1px solid var(--border-color); margin-top:10px;">
+                        <div class="financial-line"><span><strong>Total Produits :</strong></span><span><strong id="total-produits">0</strong> €</span></div>
+                    </div>
+                </div>
+                <hr style="border:0; border-top: 2px solid var(--border-color); margin: 15px 0;">
+                <div class="financial-line" style="font-size: 16px; font-weight: bold;">
+                    <span>📈 Résultat Net de l'Exercice (Bénéfice/Perte) :</span>
+                    <span><span id="resultat-net">0</span> €</span>
+                </div>
+            </div>
+
             <div class="card success-card" id="success-panel" style="display: none;">
-                <h3>🎉 Quête Validée !</h3>
-                <p>Tes écritures respectent parfaitement les obligations réglementaires françaises.</p>
+                <h3>🎉 Étape validée sans aucune erreur !</h3>
+                <p>Vos écritures sont comptablement et réglementairement parfaites.</p>
                 <div class="save-code-box" id="save-code-display"></div>
-                <button onclick="goToNextStep()" class="btn-main">Étape Suivante ➡️</button>
+                <button onclick="goToNextStep()" class="btn-main">Passer à l'Étape Suivante ➡️</button>
             </div>
         </div>
     </div>

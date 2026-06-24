@@ -12,11 +12,14 @@
     <header>
         <div>
             <div class="logo" onclick="window.location.href='index.html'">💼 Financial Hero</div>
-            <div id="mission-title" class="mission-subtitle">Chargement...</div>
+            <div id="mission-title" class="mission-subtitle">Chargement de la mission...</div>
         </div>
-        <div>
-            <div class="xp-text">Niveau Praticien : <span id="xp-display">0</span> XP</div>
-            <div class="xp-bar-container"><div class="xp-bar" id="xp-bar"></div></div>
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <button onclick="manualSaveAndExit()" class="btn-secondary">💾 Sauvegarder & Quitter</button>
+            <div>
+                <div class="xp-text">Niveau Praticien : <span id="xp-display">0</span> XP</div>
+                <div class="xp-bar-container"><div class="xp-bar" id="xp-bar"></div></div>
+            </div>
         </div>
     </header>
 
@@ -46,11 +49,18 @@
                 <button onclick="handleFormSubmit()" class="btn-main" style="margin-top: 15px;">Enregistrer la ligne</button>
             </div>
 
+            <div class="error-box" id="error-message"></div>
+
             <div class="card">
                 <h3>📖 Livre-Journal du mois</h3>
                 <table>
                     <thead>
-                        <tr><th>Compte</th><th>Débit</th><th>Crédit</th></tr>
+                        <tr>
+                            <th>Compte</th>
+                            <th>Débit</th>
+                            <th>Crédit</th>
+                            <th>Action</th>
+                        </tr>
                     </thead>
                     <tbody id="journal-table-body"></tbody>
                 </table>
@@ -64,14 +74,20 @@
                     <div>
                         <h4 class="title-actif">ACTIF (Ce qu'on possède)</h4>
                         <div id="actif-list"></div>
-                        <hr>
-                        <strong>Total Actif : <span id="total-actif">0</span> €</strong>
+                        <hr style="border: 0; border-top: 1px solid var(--border-color); margin-top: 15px;">
+                        <div class="financial-line" style="font-weight: bold;">
+                            <span>Total Actif :</span>
+                            <span><span id="total-actif">0</span> €</span>
+                        </div>
                     </div>
                     <div>
                         <h4 class="title-passif">PASSIF & RÉSULTAT</h4>
                         <div id="passif-list"></div>
-                        <hr>
-                        <strong>Total Passif : <span id="total-passif">0</span> €</strong>
+                        <hr style="border: 0; border-top: 1px solid var(--border-color); margin-top: 15px;">
+                        <div class="financial-line" style="font-weight: bold;">
+                            <span>Total Passif :</span>
+                            <span><span id="total-passif">0</span> €</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -79,9 +95,8 @@
             <div class="card success-card" id="success-panel" style="display: none;">
                 <h3>🎉 Quête Validée !</h3>
                 <p>Tes écritures respectent parfaitement les obligations réglementaires françaises.</p>
-                <button onclick="goToNextStep()" class="btn-main">Étape Suivante ➡️</button>
-                <p style="margin-top: 15px; font-size: 12px; color: var(--text-muted);">Code de sauvegarde pour ton GitHub ou ton bloc-notes :</p>
                 <div class="save-code-box" id="save-code-display"></div>
+                <button onclick="goToNextStep()" class="btn-main">Étape Suivante ➡️</button>
             </div>
         </div>
     </div>

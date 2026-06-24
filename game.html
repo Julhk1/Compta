@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Hero - Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div>
+            <div class="logo" onclick="window.location.href='index.html'">💼 Financial Hero</div>
+            <div id="mission-title" class="mission-subtitle">Chargement...</div>
+        </div>
+        <div>
+            <div class="xp-text">Niveau Praticien : <span id="xp-display">0</span> XP</div>
+            <div class="xp-bar-container"><div class="xp-bar" id="xp-bar"></div></div>
+        </div>
+    </header>
+
+    <div class="grid">
+        <div class="panel-left">
+            <div class="card" id="quest-card">
+                <h2 id="quest-title">Objectif</h2>
+                <div id="quest-description">Description de la quête...</div>
+            </div>
+
+            <div class="card">
+                <h3>✍️ Passer une écriture au Journal</h3>
+                <div class="form-group">
+                    <label>Compte Comptable (PCG)</label>
+                    <select id="account-select"></select>
+                </div>
+                <div class="grid-2">
+                    <div>
+                        <label>Débit (€)</label>
+                        <input type="number" id="input-debit" value="0">
+                    </div>
+                    <div>
+                        <label>Crédit (€)</label>
+                        <input type="number" id="input-credit" value="0">
+                    </div>
+                </div>
+                <button onclick="handleFormSubmit()" class="btn-main" style="margin-top: 15px;">Enregistrer la ligne</button>
+            </div>
+
+            <div class="card">
+                <h3>📖 Livre-Journal du mois</h3>
+                <table>
+                    <thead>
+                        <tr><th>Compte</th><th>Débit</th><th>Crédit</th></tr>
+                    </thead>
+                    <tbody id="journal-table-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="panel-right">
+            <div class="card">
+                <h2>📊 États Financiers (En temps réel)</h2>
+                <div class="grid-2">
+                    <div>
+                        <h4 class="title-actif">ACTIF (Ce qu'on possède)</h4>
+                        <div id="actif-list"></div>
+                        <hr>
+                        <strong>Total Actif : <span id="total-actif">0</span> €</strong>
+                    </div>
+                    <div>
+                        <h4 class="title-passif">PASSIF & RÉSULTAT</h4>
+                        <div id="passif-list"></div>
+                        <hr>
+                        <strong>Total Passif : <span id="total-passif">0</span> €</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card success-card" id="success-panel" style="display: none;">
+                <h3>🎉 Quête Validée !</h3>
+                <p>Tes écritures respectent parfaitement les obligations réglementaires françaises.</p>
+                <button onclick="goToNextStep()" class="btn-main">Étape Suivante ➡️</button>
+                <p style="margin-top: 15px; font-size: 12px; color: var(--text-muted);">Code de sauvegarde pour ton GitHub ou ton bloc-notes :</p>
+                <div class="save-code-box" id="save-code-display"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="js/scenarios.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

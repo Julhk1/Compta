@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Hero - Accueil</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="home-body">
+    <div class="home-card">
+        <h1>💼 Financial Hero</h1>
+        <p>Deviens l'expert-comptable et le CFO star des entreprises. Maîtrise la compta et la fiscalité française par la pratique.</p>
+        
+        <div class="menu-actions">
+            <button onclick="window.location.href='game.html'" class="btn-main">▶️ Commencer une nouvelle partie</button>
+            
+            <div class="separator">OU</div>
+            
+            <div class="import-zone">
+                <input type="text" id="code-import" placeholder="Colle ton code de sauvegarde ici...">
+                <button onclick="importSave()" class="btn-secondary">🔄 Reprendre ma progression</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function importSave() {
+            const code = document.getElementById('code-import').value;
+            if (code) {
+                localStorage.setItem('financial_hero_save', code);
+                window.location.href = 'game.html?load=true';
+            } else {
+                alert("Veuillez entrer un code valide.");
+            }
+        }
+    </script>
+</body>
+</html>

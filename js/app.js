@@ -36,7 +36,13 @@ function initGame() {
 function renderUI() {
     const scenario = scenarios[gameState.step];
     if (!scenario) {
-        alert("Félicitations, tu as terminé toutes les quêtes comptables !");
+        // Au lieu de bloquer l'écran, on propose une option de reset visuelle claire
+        document.getElementById('mission-title').innerText = "Fin de l'exercice !";
+        document.getElementById('quest-title').innerText = "🏆 Félicitations !";
+        document.getElementById('quest-description').innerHTML = `<p>Tu as terminé toutes les quêtes de la Boulangerie avec brio.</p>
+        <p>Utilise le bouton <strong>Recommencer à zéro</strong> dans l'en-tête pour réinitialiser tes tests ou modifier tes écritures.</p>`;
+        document.getElementById('xp-bar').style.width = "100%";
+        renderFinancials();
         return;
     }
 
@@ -68,6 +74,8 @@ function renderUI() {
 
 function handleFormSubmit() {
     const scenario = scenarios[gameState.step];
+    if (!scenario) return;
+
     const account = document.getElementById('account-select').value;
     const debit = parseFloat(document.getElementById('input-debit').value) || 0;
     const credit = parseFloat(document.getElementById('input-credit').value) || 0;
@@ -171,8 +179,9 @@ function renderFinancials() {
     document.getElementById('resultat-net').innerText = resultatCourant;
 
     const scenario = scenarios[gameState.step];
-    const linesRequired = Object.keys(scenario.expectedEntries).length;
+    if (!scenario) return;
     
+    const linesRequired = Object.keys(scenario.expectedEntries).length;
     if (gameState.journal.length === linesRequired && totalActif === totalPassif) {
         document.getElementById('success-panel').style.display = 'block';
         autoSave();
@@ -220,19 +229,23 @@ function skipStepTesting() {
     renderUI();
 }
 
-// AJOUT : Nouvelle fonction de retour arrière pour tes tests de navigation
 function previousStepTesting() {
     if (gameState.step > 1) {
         gameState.step -= 1;
         gameState.xp = Math.max(100, gameState.xp - 150);
-        
-        // Optionnel : Nettoie le journal visuel courant pour la clarté de l'étape reprise
         gameState.journal = []; 
-        
         autoSave();
         renderUI();
     } else {
         alert("Vous êtes déjà à la première étape !");
+    }
+}
+
+// AJOUT DE LA NOUVELLE FONCTION DE RÉINITIALISATION COMPLÈTE
+function resetGameTesting() {
+    if (confirm("Voulez-vous vraiment effacer votre progression et recommencer à l'Étape 1 ?")) {
+        localStorage.removeItem('financial_hero_save');
+        window.location.reload();
     }
 }
 

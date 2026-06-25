@@ -14,7 +14,9 @@
             <div class="logo" onclick="window.location.href='index.html'">💼 Financial Hero</div>
             <div id="mission-title" class="mission-subtitle">Chargement de la mission...</div>
         </div>
-        <div style="display: flex; align-items: center; gap: 20px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <button onclick="skipStepTesting()" class="btn-secondary" style="background-color: #ffedd5; border-color: #fdba74; color: #c2410c; font-weight: bold;">⏩ Passer l'étape (Test)</button>
+            
             <button onclick="manualSaveAndExit()" class="btn-secondary">💾 Sauvegarder & Quitter</button>
             <div>
                 <div class="xp-text">Niveau Praticien : <span id="xp-display">0</span> XP</div>
@@ -27,7 +29,7 @@
         <div class="panel-left">
             <div class="card" id="quest-card">
                 <h2 id="quest-title">Objectif</h2>
-                <div id="quest-description">Description...</div>
+                <div id="quest-description">Description de la quête...</div>
             </div>
 
             <div class="card">
@@ -55,7 +57,12 @@
                 <h3>📖 Livre-Journal du mois</h3>
                 <table>
                     <thead>
-                        <tr><th>Compte</th><th>Débit</th><th>Crédit</th><th>Action</th></tr>
+                        <tr>
+                            <th>Compte</th>
+                            <th>Débit</th>
+                            <th>Crédit</th>
+                            <th>Action</th>
+                        </tr>
                     </thead>
                     <tbody id="journal-table-body"></tbody>
                 </table>
@@ -71,13 +78,19 @@
                         <h4 class="title-actif">ACTIF</h4>
                         <div id="actif-list"></div>
                         <hr style="border:0; border-top:1px solid var(--border-color); margin-top:10px;">
-                        <div class="financial-line"><span><strong>Total Actif :</strong></span><span><strong id="total-actif">0</strong> €</span></div>
+                        <div class="financial-line">
+                            <span><strong>Total Actif :</strong></span>
+                            <span><strong id="total-actif">0</strong> €</span>
+                        </div>
                     </div>
                     <div>
                         <h4 class="title-passif">PASSIF</h4>
                         <div id="passif-list"></div>
                         <hr style="border:0; border-top:1px solid var(--border-color); margin-top:10px;">
-                        <div class="financial-line"><span><strong>Total Passif :</strong></span><span><strong id="total-passif">0</strong> €</span></div>
+                        <div class="financial-line">
+                            <span><strong>Total Passif :</strong></span>
+                            <span><strong id="total-passif">0</strong> €</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -89,13 +102,19 @@
                         <h4 style="color: var(--accent-red);">CHARGES (Dépenses)</h4>
                         <div id="charges-list"></div>
                         <hr style="border:0; border-top:1px solid var(--border-color); margin-top:10px;">
-                        <div class="financial-line"><span><strong>Total Charges :</strong></span><span><strong id="total-charges">0</strong> €</span></div>
+                        <div class="financial-line">
+                            <span><strong>Total Charges :</strong></span>
+                            <span><strong id="total-charges">0</strong> €</span>
+                        </div>
                     </div>
                     <div>
                         <h4 style="color: var(--accent-green);">PRODUITS (Ventes)</h4>
                         <div id="produits-list"></div>
                         <hr style="border:0; border-top:1px solid var(--border-color); margin-top:10px;">
-                        <div class="financial-line"><span><strong>Total Produits :</strong></span><span><strong id="total-produits">0</strong> €</span></div>
+                        <div class="financial-line">
+                            <span><strong>Total Produits :</strong></span>
+                            <span><strong id="total-produits">0</strong> €</span>
+                        </div>
                     </div>
                 </div>
                 <hr style="border:0; border-top: 2px solid var(--border-color); margin: 15px 0;">
@@ -108,7 +127,7 @@
             <div class="card success-card" id="success-panel" style="display: none;">
                 <h3>🎉 Étape validée sans aucune erreur !</h3>
                 <p>Vos écritures sont comptablement et réglementairement parfaites.</p>
-                <div class="save-code-box" id="save-code-display"></div>
+                <div class="save-code-box" id="save-code-display" style="display: none;"></div>
                 <button onclick="goToNextStep()" class="btn-main">Passer à l'Étape Suivante ➡️</button>
             </div>
         </div>

@@ -3,10 +3,19 @@ let gameState = {
     xp: 100,
     journal: [],
     balances: {
-        "512": { debit: 0, credit: 0 }, "101": { debit: 0, credit: 0 }, "164": { debit: 0, credit: 0 },
-        "215": { debit: 0, credit: 0 }, "2815": { debit: 0, credit: 0 }, "601": { debit: 0, credit: 0 }, 
-        "701": { debit: 0, credit: 0 }, "44571": { debit: 0, credit: 0 }, "44566": { debit: 0, credit: 0 },
-        "44551": { debit: 0, credit: 0 }, "6811": { debit: 0, credit: 0 }, "695": { debit: 0, credit: 0 }
+        "101": { debit: 0, credit: 0, label: "101 - Capital Social" },
+        "164": { debit: 0, credit: 0, label: "164 - Emprunts" },
+        "215": { debit: 0, credit: 0, label: "215 - Matériel Industriel" },
+        "2815": { debit: 0, credit: 0, label: "2815 - Amortissement Matériel" },
+        "401": { debit: 0, credit: 0, label: "401 - Fournisseurs" },
+        "44566": { debit: 0, credit: 0, label: "44566 - TVA Déductible" },
+        "44571": { debit: 0, credit: 0, label: "44571 - TVA Collectée" },
+        "44551": { debit: 0, credit: 0, label: "44551 - TVA à payer" },
+        "512": { debit: 0, credit: 0, label: "512 - Banque" },
+        "601": { debit: 0, credit: 0, label: "601 - Achats Farine" },
+        "6811": { debit: 0, credit: 0, label: "6811 - Dotation Amortissements" },
+        "695": { debit: 0, credit: 0, label: "695 - Impôts sur les bénéfices" },
+        "701": { debit: 0, credit: 0, label: "701 - Ventes de pain" }
     }
 };
 
@@ -27,7 +36,7 @@ function initGame() {
 function renderUI() {
     const scenario = scenarios[gameState.step];
     if (!scenario) {
-        alert("Félicitations, tu as terminé toutes les quêtes !");
+        alert("Félicitations, tu as terminé toutes les quêtes comptables !");
         return;
     }
 
@@ -35,7 +44,7 @@ function renderUI() {
     document.getElementById('quest-title').innerText = scenario.title;
     document.getElementById('quest-description').innerHTML = scenario.description;
     document.getElementById('xp-display').innerText = gameState.xp;
-    document.getElementById('xp-bar').style.width = (gameState.step * 16.6) + "%"; // 6 étapes au total
+    document.getElementById('xp-bar').style.width = (gameState.step * 16.6) + "%";
 
     const select = document.getElementById('account-select');
     select.innerHTML = '';
@@ -67,21 +76,21 @@ function handleFormSubmit() {
     if (debit === 0 && credit === 0) return alert("Indique un montant.");
     if (debit > 0 && credit > 0) return alert("Pas de montant Débit et Crédit sur la même ligne !");
 
-    // VALIDATION STRICTE DE LA LIGNE SELON LE SCÉNARIO
+    // VÉRIFICATION STRICTE COMPTE PAR COMPTE SUR L'ÉTAPE ACTUELLE
     const expected = scenario.expectedEntries[account];
     if (!expected) {
-        showError(`⚠️ Ce compte n'est pas censé bouger à cette étape.`);
+        showError(`⚠️ Erreur : Le compte ${account} n'est pas utilisé dans cette mission.`);
         return;
     }
 
     if ((expected.debit && debit !== expected.debit) || (expected.credit && credit !== expected.credit) || (expected.debit && credit > 0) || (expected.credit && debit > 0)) {
-        gameState.xp = Math.max(0, gameState.xp - 20); // Pénalité d'XP
-        showError(`❌ Erreur d'écriture ! Le compte ${account} n'est pas correctement mouvementé. Réfléchis au sens du flux (Débit ou Crédit) et au montant exact.`);
+        gameState.xp = Math.max(0, gameState.xp - 15);
+        showError(`❌ Écriture incorrecte ! Vérifie le sens (Débit/Crédit) ou le montant pour le compte ${account}.`);
         document.getElementById('xp-display').innerText = gameState.xp;
         return;
     }
 
-    // Si tout est bon, on valide la ligne
+    // Validation et enregistrement dans la balance générale
     errorBox.style.display = 'none';
     gameState.journal.push({ account, debit, credit });
     gameState.balances[account].debit += debit;
@@ -112,42 +121,65 @@ function renderFinancials() {
     for (let acc in gameState.balances) {
         const d = gameState.balances[acc].debit;
         const c = gameState.balances[acc].credit;
-        const soldeDebiteur = d - c;
-        const soldeCrediteur = c - d;
+        const labelComplexe = gameState.balances[acc].label;
 
-        if (soldeDebiteur === 0 && soldeCrediteur === 0) continue;
-
-        // 1. COMPTE DE RÉSULTAT (Classes 6 et 7)
+        // 1. TRAITEMENT DU COMPTE DE RÉSULTAT (Classes 6 et 7)
         if (acc.startsWith('6')) {
-            chargesList.innerHTML += `<div class="financial-line"><span>Comptes ${acc}</span><strong>${soldeDebiteur} €</strong></div>`;
-            totalCharges += soldeDebiteur;
+            const solde = d - c;
+            if (solde !== 0) {
+                chargesList.innerHTML += `<div class="financial-line"><span>${labelComplexe}</span><strong>${solde} €</strong></div>`;
+                totalCharges += solde;
+            }
         } else if (acc.startsWith('7')) {
-            produitsList.innerHTML += `<div class="financial-line"><span>Comptes ${acc}</span><strong>${soldeCrediteur} €</strong></div>`;
-            totalProduits += soldeCrediteur;
+            const solde = c - d;
+            if (solde !== 0) {
+                produitsList.innerHTML += `<div class="financial-line"><span>${labelComplexe}</span><strong>${solde} €</strong></div>`;
+                totalProduits += solde;
+            }
         } 
-        // 2. BILAN (Classes 1 à 4)
-        else if (["512", "215", "44566"].includes(acc)) { // Actif
-            actifList.innerHTML += `<div class="financial-line"><span>Comptes ${acc}</span><strong>${soldeDebiteur} €</strong></div>`;
-            totalActif += soldeDebiteur;
-        } else { // Passif (101, 164, 44571, 44551, 2815)
-            actifList.innerHTML += `<div class="financial-line"><span>Comptes ${acc}</span><strong>${soldeCrediteur} €</strong></div>`;
-            totalPassif += soldeCrediteur;
+        // 2. TRAITEMENT DU BILAN (Situation patrimoniale cumulative)
+        else {
+            // Comptes d'Actif par nature (215, 44566, 512)
+            if (["215", "44566", "512"].includes(acc)) {
+                const soldeActif = d - c;
+                if (soldeActif !== 0) {
+                    actifList.innerHTML += `<div class="financial-line"><span>${labelComplexe}</span><strong>${soldeActif} €</strong></div>`;
+                    totalActif += soldeActif;
+                }
+            } 
+            // Comptes de Passif par nature (101, 164, 401, 44571, 44551, 2815)
+            else {
+                const soldePassif = c - d;
+                if (soldePassif !== 0) {
+                    passifList.innerHTML += `<div class="financial-line"><span>${labelComplexe}</span><strong>${soldePassif} €</strong></div>`;
+                    totalPassif += soldePassif;
+                }
+            }
         }
     }
 
-    // Injection des totaux Bilan
+    // Intégration du bénéfice/perte de l'activité courante dans l'équilibre du bilan
+    const resultatCourant = totalProduits - totalCharges;
+    if (resultatCourant > 0) {
+        passifList.innerHTML += `<div class="financial-line" style="color:var(--accent-green)"><span>120 - Bénéfice de l'exercice</span><strong>${resultatCourant} €</strong></div>`;
+        totalPassif += resultatCourant;
+    } else if (resultatCourant < 0) {
+        passifList.innerHTML += `<div class="financial-line" style="color:var(--accent-red)"><span>129 - Perte de l'exercice</span><strong>${resultatCourant} €</strong></div>`;
+        totalPassif += resultatCourant; // ajoute la valeur négative
+    }
+
     document.getElementById('total-actif').innerText = totalActif;
     document.getElementById('total-passif').innerText = totalPassif;
-
-    // Injection des totaux Résultat
     document.getElementById('total-charges').innerText = totalCharges;
     document.getElementById('total-produits').innerText = totalProduits;
-    document.getElementById('resultat-net').innerText = totalProduits - totalCharges;
+    document.getElementById('resultat-net').innerText = resultatCourant;
 
-    // Validation automatique de l'étape si le nombre de lignes requises est atteint sans erreur
+    // Déblocage strict du bouton "Suivant" : Toutes les lignes de l'étape doivent être écrites sans déséquilibre
     const scenario = scenarios[gameState.step];
-    const requiredLines = Object.keys(scenario.expectedEntries).length;
-    if (gameState.journal.length >= requiredLines && totalActif === totalPassif) {
+    const linesRequired = Object.keys(scenario.expectedEntries).length;
+    
+    // Compter combien de lignes valides ont été passées pour cette étape précise
+    if (gameState.journal.length === linesRequired && totalActif === totalPassif) {
         document.getElementById('success-panel').style.display = 'block';
         const encryptedSave = btoa(JSON.stringify(gameState));
         document.getElementById('save-code-display').innerText = encryptedSave;
@@ -168,14 +200,14 @@ function deleteLine(index) {
 function manualSaveAndExit() {
     const encryptedSave = btoa(JSON.stringify(gameState));
     localStorage.setItem('financial_hero_save', encryptedSave);
-    alert(`Partie sauvegardée !`);
+    alert(`Progression enregistrée.`);
     window.location.href = 'index.html';
 }
 
 function goToNextStep() {
     gameState.step += 1;
     gameState.xp += 150;
-    gameState.journal = []; // On nettoie le journal pour le nouveau mois
+    gameState.journal = []; // On vide le cahier journalier visuel pour la nouvelle mission
     renderUI();
 }
 

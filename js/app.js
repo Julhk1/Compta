@@ -73,7 +73,10 @@ function handleFormSubmit() {
     const credit = parseFloat(document.getElementById('input-credit').value) || 0;
     const errorBox = document.getElementById('error-message');
 
-    if (debit === 0 && credit === 0) return alert("Indique un montant.");
+    // CORRECTION : Autorise les montants à 0 uniquement pour la clôture fiscale de l'étape 6
+    if (debit === 0 && credit === 0 && gameState.step !== 6) {
+        return alert("Indique un montant.");
+    }
     if (debit > 0 && credit > 0) return alert("Pas de montant Débit et Crédit sur la même ligne !");
 
     // VÉRIFICATION STRICTE COMPTE PAR COMPTE SUR L'ÉTAPE ACTUELLE
@@ -139,7 +142,6 @@ function renderFinancials() {
         } 
         // 2. TRAITEMENT DU BILAN (Situation patrimoniale cumulative)
         else {
-            // Comptes d'Actif par nature (215, 44566, 512)
             if (["215", "44566", "512"].includes(acc)) {
                 const soldeActif = d - c;
                 if (soldeActif !== 0) {
@@ -147,7 +149,6 @@ function renderFinancials() {
                     totalActif += soldeActif;
                 }
             } 
-            // Comptes de Passif par nature (101, 164, 401, 44571, 44551, 2815)
             else {
                 const soldePassif = c - d;
                 if (soldePassif !== 0) {
@@ -158,14 +159,14 @@ function renderFinancials() {
         }
     }
 
-    // Intégration du bénéfice/perte de l'activité courante dans l'équilibre du bilan
+    // Intégration du bénéfice/perte au bilan
     const resultatCourant = totalProduits - totalCharges;
     if (resultatCourant > 0) {
         passifList.innerHTML += `<div class="financial-line" style="color:var(--accent-green)"><span>120 - Bénéfice de l'exercice</span><strong>${resultatCourant} €</strong></div>`;
         totalPassif += resultatCourant;
     } else if (resultatCourant < 0) {
         passifList.innerHTML += `<div class="financial-line" style="color:var(--accent-red)"><span>129 - Perte de l'exercice</span><strong>${resultatCourant} €</strong></div>`;
-        totalPassif += resultatCourant; // ajoute la valeur négative
+        totalPassif += resultatCourant;
     }
 
     document.getElementById('total-actif').innerText = totalActif;
@@ -174,11 +175,10 @@ function renderFinancials() {
     document.getElementById('total-produits').innerText = totalProduits;
     document.getElementById('resultat-net').innerText = resultatCourant;
 
-    // Déblocage strict du bouton "Suivant" : Toutes les lignes de l'étape doivent être écrites sans déséquilibre
+    // Déblocage du bouton "Suivant"
     const scenario = scenarios[gameState.step];
     const linesRequired = Object.keys(scenario.expectedEntries).length;
     
-    // Compter combien de lignes valides ont été passées pour cette étape précise
     if (gameState.journal.length === linesRequired && totalActif === totalPassif) {
         document.getElementById('success-panel').style.display = 'block';
         const encryptedSave = btoa(JSON.stringify(gameState));
@@ -207,7 +207,7 @@ function manualSaveAndExit() {
 function goToNextStep() {
     gameState.step += 1;
     gameState.xp += 150;
-    gameState.journal = []; // On vide le cahier journalier visuel pour la nouvelle mission
+    gameState.journal = [];
     renderUI();
 }
 

@@ -20,7 +20,6 @@ let gameState = {
 };
 
 function initGame() {
-    // CORRECTION : Chargement AUTOMATIQUE depuis la mémoire du navigateur sans rien demander
     const localSave = localStorage.getItem('financial_hero_save');
     
     if (localSave) {
@@ -100,7 +99,6 @@ function handleFormSubmit() {
     document.getElementById('input-debit').value = 0;
     document.getElementById('input-credit').value = 0;
 
-    // Sauvegarde automatique en arrière-plan à chaque action
     autoSave();
     renderUI();
 }
@@ -202,15 +200,12 @@ function manualSaveAndExit() {
     window.location.href = 'index.html';
 }
 
-// BOUTON DE TRICHE POUR LE TESTING : Complète automatiquement l'étape en cours
 function skipStepTesting() {
     const scenario = scenarios[gameState.step];
     if (!scenario) return;
 
-    // Nettoyer le journal de l'étape pour éviter les doublons
     gameState.journal = [];
 
-    // Injecter de force les écritures parfaites attendues
     for (let acc in scenario.expectedEntries) {
         const expected = scenario.expectedEntries[acc];
         const deb = expected.debit || 0;
@@ -223,6 +218,22 @@ function skipStepTesting() {
 
     autoSave();
     renderUI();
+}
+
+// AJOUT : Nouvelle fonction de retour arrière pour tes tests de navigation
+function previousStepTesting() {
+    if (gameState.step > 1) {
+        gameState.step -= 1;
+        gameState.xp = Math.max(100, gameState.xp - 150);
+        
+        // Optionnel : Nettoie le journal visuel courant pour la clarté de l'étape reprise
+        gameState.journal = []; 
+        
+        autoSave();
+        renderUI();
+    } else {
+        alert("Vous êtes déjà à la première étape !");
+    }
 }
 
 function goToNextStep() {

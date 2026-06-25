@@ -15,8 +15,10 @@
             <div id="mission-title" class="mission-subtitle">Chargement de la mission...</div>
         </div>
         <div style="display: flex; align-items: center; gap: 10px;">
-            <button onclick="previousStepTesting()" class="btn-secondary" style="background-color: #e0f2fe; border-color: #7dd3fc; color: #0369a1; font-weight: bold; cursor: pointer;">⏪ Étape précédente (Test)</button>
+            <button onclick="resetGameTesting()" class="btn-secondary" style="background-color: #ffe4e6; border-color: #fecdd3; color: #be123c; font-weight: bold; cursor: pointer;">🔄 Recommencer à zéro</button>
 
+            <button onclick="previousStepTesting()" class="btn-secondary" style="background-color: #e0f2fe; border-color: #7dd3fc; color: #0369a1; font-weight: bold; cursor: pointer;">== $0</button>
+            <button onclick="previousStepTesting()" class="btn-secondary" style="background-color: #e0f2fe; border-color: #7dd3fc; color: #0369a1; font-weight: bold; cursor: pointer;">⏪ Étape précédente (Test)</button>
             <button onclick="skipStepTesting()" class="btn-secondary" style="background-color: #ffedd5; border-color: #fdba74; color: #c2410c; font-weight: bold; cursor: pointer;">⏩ Passer l'étape (Test)</button>
             
             <button onclick="manualSaveAndExit()" class="btn-secondary" style="cursor: pointer;">💾 Sauvegarder & Quitter</button>
@@ -73,7 +75,6 @@
         </div>
 
         <div class="panel-right">
-            
             <div class="card">
                 <h2 style="color: var(--accent-green); border-bottom: 2px solid var(--border-color); padding-bottom: 5px;">⚖️ LE BILAN (Situation Patrimoniale)</h2>
                 <div class="grid-2">

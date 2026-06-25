@@ -15,17 +15,12 @@
             <div id="mission-title" class="mission-subtitle">Chargement de la mission...</div>
         </div>
         <div style="display: flex; align-items: center; gap: 10px;">
-    <button onclick="skipStepTesting()" class="btn-secondary" style="background-color: #ffedd5; border-color: #fdba74; color: #c2410c; font-weight: bold; cursor: pointer;">⏩ Passer l'étape (Test)</button>
-    
-    <button onclick="manualSaveAndExit()" class="btn-secondary" style="cursor: pointer;">💾 Sauvegarder & Quitter</button>
-    
-    <div>
-        <div class="xp-text">Niveau Praticien : <span id="xp-display">0</span> XP</div>
-        <div class="xp-bar-container"><div class="xp-bar" id="xp-bar"></div></div>
-    </div>
-</div>
+            <button onclick="previousStepTesting()" class="btn-secondary" style="background-color: #e0f2fe; border-color: #7dd3fc; color: #0369a1; font-weight: bold; cursor: pointer;">⏪ Étape précédente (Test)</button>
+
+            <button onclick="skipStepTesting()" class="btn-secondary" style="background-color: #ffedd5; border-color: #fdba74; color: #c2410c; font-weight: bold; cursor: pointer;">⏩ Passer l'étape (Test)</button>
             
-            <button onclick="manualSaveAndExit()" class="btn-secondary">💾 Sauvegarder & Quitter</button>
+            <button onclick="manualSaveAndExit()" class="btn-secondary" style="cursor: pointer;">💾 Sauvegarder & Quitter</button>
+            
             <div>
                 <div class="xp-text">Niveau Praticien : <span id="xp-display">0</span> XP</div>
                 <div class="xp-bar-container"><div class="xp-bar" id="xp-bar"></div></div>
@@ -56,7 +51,7 @@
                         <input type="number" id="input-credit" value="0">
                     </div>
                 </div>
-                <button onclick="handleFormSubmit()" class="btn-main" style="margin-top: 15px;">Enregistrer la ligne</button>
+                <button onclick="handleFormSubmit()" class="btn-main" style="margin-top: 15px; cursor: pointer;">Enregistrer la ligne</button>
             </div>
 
             <div class="error-box" id="error-message"></div>
@@ -136,7 +131,7 @@
                 <h3>🎉 Étape validée sans aucune erreur !</h3>
                 <p>Vos écritures sont comptablement et réglementairement parfaites.</p>
                 <div class="save-code-box" id="save-code-display" style="display: none;"></div>
-                <button onclick="goToNextStep()" class="btn-main">Passer à l'Étape Suivante ➡️</button>
+                <button onclick="goToNextStep()" class="btn-main" style="cursor: pointer;">Passer à l'Étape Suivante ➡️</button>
             </div>
         </div>
     </div>

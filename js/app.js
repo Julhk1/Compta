@@ -20,14 +20,15 @@ let gameState = {
 };
 
 function initGame() {
-    const urlParams = new URLSearchParams(window.location.search);
+    // CORRECTION : Chargement AUTOMATIQUE depuis la mémoire du navigateur sans rien demander
     const localSave = localStorage.getItem('financial_hero_save');
     
-    if (urlParams.get('load') === 'true' && localSave) {
+    if (localSave) {
         try {
             gameState = JSON.parse(atob(localSave));
+            console.log("Session précédente rechargée automatiquement !");
         } catch(e) {
-            alert("Erreur de chargement.");
+            console.error("Erreur lors du chargement automatique de la sauvegarde.");
         }
     }
     renderUI();
@@ -73,13 +74,11 @@ function handleFormSubmit() {
     const credit = parseFloat(document.getElementById('input-credit').value) || 0;
     const errorBox = document.getElementById('error-message');
 
-    // CORRECTION : Autorise les montants à 0 uniquement pour la clôture fiscale de l'étape 6
     if (debit === 0 && credit === 0 && gameState.step !== 6) {
         return alert("Indique un montant.");
     }
     if (debit > 0 && credit > 0) return alert("Pas de montant Débit et Crédit sur la même ligne !");
 
-    // VÉRIFICATION STRICTE COMPTE PAR COMPTE SUR L'ÉTAPE ACTUELLE
     const expected = scenario.expectedEntries[account];
     if (!expected) {
         showError(`⚠️ Erreur : Le compte ${account} n'est pas utilisé dans cette mission.`);
@@ -93,7 +92,6 @@ function handleFormSubmit() {
         return;
     }
 
-    // Validation et enregistrement dans la balance générale
     errorBox.style.display = 'none';
     gameState.journal.push({ account, debit, credit });
     gameState.balances[account].debit += debit;
@@ -102,6 +100,8 @@ function handleFormSubmit() {
     document.getElementById('input-debit').value = 0;
     document.getElementById('input-credit').value = 0;
 
+    // Sauvegarde automatique en arrière-plan à chaque action
+    autoSave();
     renderUI();
 }
 
@@ -126,7 +126,6 @@ function renderFinancials() {
         const c = gameState.balances[acc].credit;
         const labelComplexe = gameState.balances[acc].label;
 
-        // 1. TRAITEMENT DU COMPTE DE RÉSULTAT (Classes 6 et 7)
         if (acc.startsWith('6')) {
             const solde = d - c;
             if (solde !== 0) {
@@ -140,7 +139,6 @@ function renderFinancials() {
                 totalProduits += solde;
             }
         } 
-        // 2. TRAITEMENT DU BILAN (Situation patrimoniale cumulative)
         else {
             if (["215", "44566", "512"].includes(acc)) {
                 const soldeActif = d - c;
@@ -159,7 +157,6 @@ function renderFinancials() {
         }
     }
 
-    // Intégration du bénéfice/perte au bilan
     const resultatCourant = totalProduits - totalCharges;
     if (resultatCourant > 0) {
         passifList.innerHTML += `<div class="financial-line" style="color:var(--accent-green)"><span>120 - Bénéfice de l'exercice</span><strong>${resultatCourant} €</strong></div>`;
@@ -175,15 +172,12 @@ function renderFinancials() {
     document.getElementById('total-produits').innerText = totalProduits;
     document.getElementById('resultat-net').innerText = resultatCourant;
 
-    // Déblocage du bouton "Suivant"
     const scenario = scenarios[gameState.step];
     const linesRequired = Object.keys(scenario.expectedEntries).length;
     
     if (gameState.journal.length === linesRequired && totalActif === totalPassif) {
         document.getElementById('success-panel').style.display = 'block';
-        const encryptedSave = btoa(JSON.stringify(gameState));
-        document.getElementById('save-code-display').innerText = encryptedSave;
-        localStorage.setItem('financial_hero_save', encryptedSave);
+        autoSave();
     } else {
         document.getElementById('success-panel').style.display = 'none';
     }
@@ -194,20 +188,48 @@ function deleteLine(index) {
     gameState.balances[item.account].debit -= item.debit;
     gameState.balances[item.account].credit -= item.credit;
     gameState.journal.splice(index, 1);
+    autoSave();
     renderUI();
 }
 
-function manualSaveAndExit() {
+function autoSave() {
     const encryptedSave = btoa(JSON.stringify(gameState));
     localStorage.setItem('financial_hero_save', encryptedSave);
-    alert(`Progression enregistrée.`);
+}
+
+function manualSaveAndExit() {
+    autoSave();
     window.location.href = 'index.html';
+}
+
+// BOUTON DE TRICHE POUR LE TESTING : Complète automatiquement l'étape en cours
+function skipStepTesting() {
+    const scenario = scenarios[gameState.step];
+    if (!scenario) return;
+
+    // Nettoyer le journal de l'étape pour éviter les doublons
+    gameState.journal = [];
+
+    // Injecter de force les écritures parfaites attendues
+    for (let acc in scenario.expectedEntries) {
+        const expected = scenario.expectedEntries[acc];
+        const deb = expected.debit || 0;
+        const cred = expected.credit || 0;
+
+        gameState.journal.push({ account: acc, debit: deb, credit: cred });
+        gameState.balances[acc].debit += deb;
+        gameState.balances[acc].credit += cred;
+    }
+
+    autoSave();
+    renderUI();
 }
 
 function goToNextStep() {
     gameState.step += 1;
     gameState.xp += 150;
     gameState.journal = [];
+    autoSave();
     renderUI();
 }
 

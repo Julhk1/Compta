@@ -15,7 +15,15 @@
             <div id="mission-title" class="mission-subtitle">Chargement de la mission...</div>
         </div>
         <div style="display: flex; align-items: center; gap: 10px;">
-            <button onclick="skipStepTesting()" class="btn-secondary" style="background-color: #ffedd5; border-color: #fdba74; color: #c2410c; font-weight: bold;">⏩ Passer l'étape (Test)</button>
+    <button onclick="skipStepTesting()" class="btn-secondary" style="background-color: #ffedd5; border-color: #fdba74; color: #c2410c; font-weight: bold; cursor: pointer;">⏩ Passer l'étape (Test)</button>
+    
+    <button onclick="manualSaveAndExit()" class="btn-secondary" style="cursor: pointer;">💾 Sauvegarder & Quitter</button>
+    
+    <div>
+        <div class="xp-text">Niveau Praticien : <span id="xp-display">0</span> XP</div>
+        <div class="xp-bar-container"><div class="xp-bar" id="xp-bar"></div></div>
+    </div>
+</div>
             
             <button onclick="manualSaveAndExit()" class="btn-secondary">💾 Sauvegarder & Quitter</button>
             <div>

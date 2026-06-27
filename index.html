@@ -3,34 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Financial Hero - Accueil</title>
-    <link rel="stylesheet" href="css/style.css">
+    
+    <title>Financial Hero | Jeu de rôle et Exercices de Comptabilité Gratuits</title>
+    <meta name="description" content="Financial Hero est un jeu de simulation gratuit pour maîtriser la comptabilité générale, le bilan, le compte de résultat et la fiscalité française à travers des exercices et cas pratiques concrets.">
+    <meta name="keywords" content="jeu comptabilite, exercice comptabilite gratuit, apprendre la compta, bilan interactif, fiscalite francaise, comptabilite generale, expert comptable simulation">
+    <meta name="author" content="Financial Hero">
+
+    <style>
+        :root {
+            --bg-light: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --accent-green: #0d9488;
+            --border-color: #cbd5e1;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .home-card {
+            max-width: 550px;
+            width: 100%;
+            background: var(--bg-card);
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            text-align: center;
+            margin: 20px;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: var(--accent-green);
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .menu-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .btn-main {
+            background-color: var(--accent-green);
+            color: #ffffff;
+            border: none;
+            padding: 14px 28px;
+            font-weight: bold;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            box-sizing: border-box;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .btn-main:hover {
+            background-color: #0f766e;
+        }
+
+        .btn-main:active {
+            transform: scale(0.99);
+        }
+
+        .separator {
+            margin: 15px 0;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .separator::before, .separator::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid var(--border-color);
+            margin: 0 10px;
+        }
+
+        .import-zone {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            background-color: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-main);
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        input[type="text"]:focus {
+            outline: 2px solid var(--accent-green);
+            border-color: transparent;
+        }
+
+        .btn-secondary {
+            background-color: #f1f5f9;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e2e8f0;
+        }
+    </style>
 </head>
-<body class="home-body">
+<body>
+
     <div class="home-card">
         <h1>💼 Financial Hero</h1>
-        <p>Deviens l'expert-comptable et le CFO star des entreprises. Maîtrise la compta et la fiscalité française par la pratique.</p>
+        <p class="subtitle">Deviens l'expert-comptable et le CFO star des entreprises. Maîtrise la comptabilité générale et la fiscalité française par la pratique en temps réel.</p>
         
         <div class="menu-actions">
-            <button onclick="window.location.href='game.html'" class="btn-main">▶️ Commencer une nouvelle partie</button>
+            <button onclick="window.location.href='game.html'" class="btn-main">▶️ Commencer / Reprendre la partie</button>
             
-            <div class="separator">OU</div>
+            <div class="separator">OU CHANGER DE SESSION</div>
             
             <div class="import-zone">
-                <input type="text" id="code-import" placeholder="Colle ton code de sauvegarde ici...">
-                <button onclick="importSave()" class="btn-secondary">🔄 Reprendre ma progression</button>
+                <input type="text" id="code-import" placeholder="Coller un code chiffré si vous changez de PC...">
+                <button onclick="importSave()" class="btn-secondary">🔄 Forcer l'importation manuelle</button>
             </div>
         </div>
     </div>
 
     <script>
         function importSave() {
-            const code = document.getElementById('code-import').value;
+            const code = document.getElementById('code-import').value.trim();
             if (code) {
-                localStorage.setItem('financial_hero_save', code);
-                window.location.href = 'game.html?load=true';
+                try {
+                    // Petite vérification pour s'assurer que c'est bien une structure JSON base64 avant de l'accepter
+                    const decoded = atob(code);
+                    JSON.parse(decoded);
+                    
+                    localStorage.setItem('financial_hero_save', code);
+                    window.location.href = 'game.html?load=true';
+                } catch(e) {
+                    alert("Le code de sauvegarde fourni est invalide ou corrompu.");
+                }
             } else {
-                alert("Veuillez entrer un code valide.");
+                alert("Veuillez entrer un code de sauvegarde.");
             }
         }
     </script>
